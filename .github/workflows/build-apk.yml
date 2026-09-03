@@ -1,7 +1,10 @@
-name: Build APK
+name: Build Dark Eye Trader APK
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -11,29 +14,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Extract project ZIP
-        run: |
-          unzip -o DarkEyeTrader-APK-Ready.zip
-          ls -la DarkEyeTrader-Android
-
-      - name: Setup Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.11.1'
+          gradle-version: '8.7'
 
       - name: Build APK
-        run: |
-          cd DarkEyeTrader-Android
-          gradle assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: DarkEyeTrader-APK
-          path: DarkEyeTrader-Android/app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
